@@ -1,0 +1,9 @@
+SELECT * FROM ovochi INNER JOIN frukti ON ovochi.id=frukti.id
+# Джойн всего из двух таблиц
+
+SELECT ovoch, frukt, frukti.cvet 
+FROM ovochi 
+JOIN frukti 
+ON ovochi.cvet = frukti.cvet 
+WHERE ovochi.cvet= 'зелёный'
+# Джойн зелёного из двух таблиц

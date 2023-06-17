@@ -1,0 +1,96 @@
+# Этот бот помогает в рабочем чатике определять взятые в работу задачи
+import telebot
+
+# Создаем экземпляр бота
+bot = telebot.TeleBot('TOKEN');
+BD = []
+
+
+Guillermo_NAMES = [
+"Guillermo",
+"Guillermo!",
+"Гильермо!",
+"Гильермо?",
+"Гильермо",
+"Бот!",
+"Бот?",
+"Бот",
+"@Herr_Guillermo",
+"Herr_Guillermo",
+]
+SLOVARNIY_ZAPAS = [
+    "Чо?",
+    "Чотам?",
+    "Чо там?",
+    "Покурим?",
+    "/help",
+    "/HELP",
+    "&&&",
+    "???",
+    "Чотам",
+    "чотам",
+    "xj nfv&",
+    "xj nfv",
+    "Xj nfv&",
+    "Xj nfv",
+    "+++",
+    "---",
+    "Что там?",
+    "Чтотам?",
+    "чтотам?",
+    "Что?",
+    "что?",
+    "xj",
+    "xnj",   
+    "902010+",
+    "Взятые задачи",
+    "Что",
+    "что",
+    ]
+
+
+
+# Функция, обрабатывающая команду /start
+@bot.message_handler(commands=["start"])
+def start(m, res=False):
+    bot.send_message(m.chat.id, 'Пииип, Этот РОБОТ запущен, Пип!')
+
+# Получение сообщений от юзера
+@bot.message_handler(func=lambda message: True)
+def handle_text(message):
+    text = message.text
+
+    words = text.split()  # Разделение текста на слова
+
+    for word in words:
+        if len(word) == 5 and word[:-1].isdigit() and (word.endswith("+") or word.endswith("-")):
+            if word.endswith("+"):
+                word = word[:-1]  # Удаление символа "+" из слова
+                if word in BD:
+                    bot.send_message(message.chat.id, "Положи назад! " + word + " Это уже в работе")
+                else:
+                    BD.append(word)
+                    bot.send_message(message.chat.id, "Ты взял в работу " + word + " Молодец!")
+                #    print("Определено слово: " + word)
+                #    print(BD)
+            elif word.endswith("-"):
+                word = word[:-1]  # Удаление символа "-" из слова
+                if word in BD:
+                    BD.remove(word)
+                    bot.send_message(message.chat.id, "Убрал из взятых " + word)
+                else:
+                    bot.send_message(message.chat.id, word + " - Этого никто не брал!")
+
+               # print("Определено слово: " + word)
+        elif word in Guillermo_NAMES:
+            bot.send_message(message.chat.id, "Jawohl mein Führer!")
+
+
+
+    if text in SLOVARNIY_ZAPAS:
+        # print(BD)
+        bot.send_message(message.chat.id, "Взятые задачи: " + ', '.join(BD))
+
+
+# Запускаем бота
+bot.polling(none_stop=True, interval=0)
